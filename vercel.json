@@ -4,11 +4,6 @@
   "outputDirectory": "frontend/dist",
   "installCommand": "npm install",
   "framework": null,
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "@vercel/node@24.0.0"
-    }
-  },
   "rewrites": [
     { "source": "/api/contact", "destination": "/api/contact" },
     { "source": "/api/newsletter", "destination": "/api/newsletter" },
