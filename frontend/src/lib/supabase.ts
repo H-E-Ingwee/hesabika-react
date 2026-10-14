@@ -1,15 +1,25 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://ckmuptnnbnonmouynysh.supabase.co'
-const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_x-qrRT-bBDcfu-csjtuksQ_4jprIRwr'
+// These are PUBLIC/publishable keys — safe to use in frontend
+// Never put SUPABASE_SECRET_KEY in frontend code
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-  },
-})
+if (!supabaseUrl || !supabaseKey) {
+  console.warn('Supabase environment variables not set. Check your .env file.')
+}
+
+export const supabase = createClient(
+  supabaseUrl || '',
+  supabaseKey || '',
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
+  }
+)
 
 export type Database = {
   public: {
@@ -49,34 +59,6 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['gipro_interns']['Row'], 'id' | 'created_at'>
         Update: Partial<Database['public']['Tables']['gipro_interns']['Insert']>
-      }
-      gipro_mentors: {
-        Row: {
-          id: string
-          name: string
-          profession: string
-          organization: string
-          bio: string
-          image_url: string
-          linkedin_url: string
-          order_index: number
-          created_at: string
-        }
-        Insert: Omit<Database['public']['Tables']['gipro_mentors']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['gipro_mentors']['Insert']>
-      }
-      board_members: {
-        Row: {
-          id: string
-          name: string
-          role: string
-          bio: string
-          image_url: string
-          order_index: number
-          created_at: string
-        }
-        Insert: Omit<Database['public']['Tables']['board_members']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['board_members']['Insert']>
       }
       contact_messages: {
         Row: {
@@ -135,21 +117,6 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['mentor_applications']['Row'], 'id' | 'created_at' | 'status'>
         Update: Partial<Database['public']['Tables']['mentor_applications']['Insert']>
-      }
-      events: {
-        Row: {
-          id: string
-          title: string
-          description: string
-          date: string
-          location: string
-          image_url: string
-          registration_url: string
-          active: boolean
-          created_at: string
-        }
-        Insert: Omit<Database['public']['Tables']['events']['Row'], 'id' | 'created_at'>
-        Update: Partial<Database['public']['Tables']['events']['Insert']>
       }
     }
   }

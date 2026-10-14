@@ -8,9 +8,9 @@ const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SE
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: 'ohwpmgr1',
-  api_key: '957245391313748',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'MSG-_kZUQOf1l1vDatdmI0i1cnY',
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'ohwpmgr1',
+  api_key: process.env.CLOUDINARY_API_KEY || '957245391313748',
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
 // Multer memory storage

@@ -2,10 +2,11 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { handleCors, requireAuth } from './_lib/cors'
 import { v2 as cloudinary } from 'cloudinary'
 
+// Cloudinary config — all from environment variables, never hardcoded
 cloudinary.config({
-  cloud_name: 'ohwpmgr1',
-  api_key: '957245391313748',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'MSG-_kZUQOf1l1vDatdmI0i1cnY',
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'ohwpmgr1',
+  api_key: process.env.CLOUDINARY_API_KEY || '957245391313748',
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -16,7 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!userId) return
 
   try {
-    const { image, folder = 'hesabika' } = req.body
+    const { image, folder = 'general' } = req.body
 
     if (!image) return res.status(400).json({ error: 'Image data required (base64)' })
 

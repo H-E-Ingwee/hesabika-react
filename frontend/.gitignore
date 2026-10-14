@@ -1,6 +1,24 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
+
+# Environment files — NEVER commit
 .env
 .env.local
-.DS_Store
+.env.*.local
+
+# Logs
 *.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo

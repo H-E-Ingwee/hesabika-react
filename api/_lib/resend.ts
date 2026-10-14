@@ -1,6 +1,13 @@
 import { Resend } from 'resend'
 
-export const resend = new Resend(process.env.RESEND_API_KEY || 're_6rZjTgkr_BRGkggqTPYFNnqT5rTa7SRS9')
+// Resend API key — server-side only, loaded from environment variable
+const resendApiKey = process.env.RESEND_API_KEY
+
+if (!resendApiKey) {
+  console.warn('RESEND_API_KEY environment variable not set.')
+}
+
+export const resend = new Resend(resendApiKey || '')
 
 export const TEAM_EMAIL = 'info@hesabika.com'
 export const FROM_EMAIL = 'Hesabika Trust <info@hesabika.com>'
@@ -16,7 +23,7 @@ export const emailTemplate = (content: string) => `
 <body style="margin:0;padding:0;background:#f5f5f0;font-family:'IBM Plex Sans',Arial,sans-serif;">
   <div style="max-width:600px;margin:0 auto;background:#ffffff;">
     <div style="background:linear-gradient(135deg,#166935 0%,#0f4d26 100%);padding:28px 32px;">
-      <img src="https://hesabika-react.vercel.app/images/logo.png" alt="Hesabika Trust" style="height:40px;filter:brightness(0) invert(1);" onerror="this.style.display='none'"/>
+      <p style="color:white;font-size:20px;font-weight:bold;margin:0;">Hesabika Trust</p>
       <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:6px 0 0;letter-spacing:0.1em;text-transform:uppercase;">Translating Concern into Action</p>
     </div>
     <div style="padding:32px;">
