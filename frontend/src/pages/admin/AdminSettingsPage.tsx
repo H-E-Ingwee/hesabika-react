@@ -1,198 +1,258 @@
-import { useState } from 'react'
-import { Save, Globe, Mail, Phone, MapPin, Shield, Bell, Palette } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Save, Globe, Mail, Phone, MapPin, Shield, Bell, Megaphone, RefreshCw, CheckCircle, ExternalLink } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
-import { SITE_CONFIG } from '@/lib/data'
+import { supabase } from '@/lib/supabase'
+import { useRole } from '@/hooks/useRole'
 import toast from 'react-hot-toast'
 
+type SettingCategory = 'general' | 'contact' | 'giving' | 'social' | 'programmes' | 'system'
+
+const CATEGORIES: { id: SettingCategory; label: string; icon: React.ElementType }[] = [
+  { id: 'general', label: 'General', icon: Globe },
+  { id: 'contact', label: 'Contact', icon: Phone },
+  { id: 'giving', label: 'Giving', icon: Mail },
+  { id: 'social', label: 'Social Media', icon: Bell },
+  { id: 'programmes', label: 'Programmes', icon: Megaphone },
+  { id: 'system', label: 'System', icon: Shield },
+]
+
 export default function AdminSettingsPage() {
-  const [activeTab, setActiveTab] = useState<'general' | 'contact' | 'social' | 'security'>('general')
+  const { isAdmin, isSuperAdmin, can } = useRole()
+  const [activeCategory, setActiveCategory] = useState<SettingCategory>('general')
+  const [settings, setSettings] = useState<Record<string, string>>({})
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [changed, setChanged] = useState<Set<string>>(new Set())
 
-  const [general, setGeneral] = useState({
-    name: SITE_CONFIG.name,
-    tagline: SITE_CONFIG.tagline,
-    description: SITE_CONFIG.description,
-    focus_description: SITE_CONFIG.focus_description,
-  })
+  useEffect(() => { loadSettings() }, [])
 
-  const [contact, setContact] = useState({
-    phone: SITE_CONFIG.phone,
-    email: SITE_CONFIG.email,
-    address: SITE_CONFIG.address,
-    address2: SITE_CONFIG.address2,
-    mpesa_paybill: SITE_CONFIG.mpesa_paybill,
-    mpesa_account: SITE_CONFIG.mpesa_account,
-    bank_name: SITE_CONFIG.bank_name,
-    bank_account_name: SITE_CONFIG.bank_account_name,
-    bank_account_number: SITE_CONFIG.bank_account_number,
-    bank_swift: SITE_CONFIG.bank_swift,
-  })
-
-  const [social, setSocial] = useState({ ...SITE_CONFIG.social })
-
-  const save = async () => {
-    setSaving(true)
-    await new Promise(r => setTimeout(r, 800))
-    toast.success('Settings saved! Update data.ts to persist changes.')
-    setSaving(false)
+  const loadSettings = async () => {
+    setLoading(true)
+    try {
+      const { data, error } = await supabase.from('site_settings').select('*')
+      if (error) throw error
+      const map: Record<string, string> = {}
+      data?.forEach((row: any) => { map[row.key] = row.value })
+      setSettings(map)
+    } catch {
+      toast.error('Failed to load settings')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const tabs = [
-    { id: 'general', label: 'General', icon: Globe },
-    { id: 'contact', label: 'Contact & Giving', icon: Phone },
-    { id: 'social', label: 'Social Media', icon: Bell },
-    { id: 'security', label: 'Security', icon: Shield },
-  ]
+  const updateSetting = (key: string, value: string) => {
+    setSettings(prev => ({ ...prev, [key]: value }))
+    setChanged(prev => new Set(prev).add(key))
+  }
+
+  const saveSettings = async () => {
+    if (!can.editSettings) { toast.error('You do not have permission to edit settings'); return }
+    setSaving(true)
+    try {
+      const updates = Array.from(changed).map(key => ({
+        key,
+        value: settings[key] || '',
+        updated_at: new Date().toISOString(),
+      }))
+      for (const update of updates) {
+        const { error } = await supabase
+          .from('site_settings')
+          .upsert(update, { onConflict: 'key' })
+        if (error) throw error
+      }
+      setChanged(new Set())
+      toast.success(`${updates.length} setting${updates.length > 1 ? 's' : ''} saved successfully`)
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to save settings')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const settingsByCategory: Record<SettingCategory, Array<{ key: string; label: string; type?: string; description?: string; readonly?: boolean }>> = {
+    general: [
+      { key: 'site_name', label: 'Organisation Name', description: 'The name displayed throughout the site' },
+      { key: 'tagline', label: 'Tagline', description: 'Short tagline shown in the header and footer' },
+      { key: 'description', label: 'Main Description', type: 'textarea', description: 'Used in meta tags and About sections' },
+      { key: 'announcement_text', label: 'Announcement Banner Text', description: 'Text shown in the top announcement bar' },
+      { key: 'announcement_active', label: 'Show Announcement Banner', type: 'toggle', description: 'Toggle the announcement bar on/off' },
+    ],
+    contact: [
+      { key: 'phone', label: 'Phone Number' },
+      { key: 'email', label: 'Email Address' },
+      { key: 'address', label: 'Primary Address' },
+    ],
+    giving: [
+      { key: 'mpesa_paybill', label: 'MPESA Paybill Number' },
+      { key: 'mpesa_account', label: 'MPESA Account Name' },
+      { key: 'bank_name', label: 'Bank Name' },
+      { key: 'bank_account', label: 'Bank Account Number' },
+      { key: 'bank_swift', label: 'SWIFT Code' },
+    ],
+    social: [
+      { key: 'facebook_url', label: 'Facebook URL' },
+      { key: 'twitter_url', label: 'Twitter / X URL' },
+      { key: 'instagram_url', label: 'Instagram URL' },
+      { key: 'youtube_url', label: 'YouTube URL' },
+      { key: 'linkedin_url', label: 'LinkedIn URL' },
+    ],
+    programmes: [
+      { key: 'elpro_fellows_count', label: 'ELPro Fellows Count', description: 'Number shown on the ELPro page and stats' },
+      { key: 'gipro_alumni_count', label: 'GIPro Alumni Count', description: 'Number shown on the GIPro page and stats' },
+      { key: 'caucuses_count', label: 'Caucuses Count', description: 'Number of active caucuses' },
+    ],
+    system: [
+      { key: 'maintenance_mode', label: 'Maintenance Mode', type: 'toggle', description: 'When enabled, shows a maintenance page to visitors', readonly: !isSuperAdmin },
+    ],
+  }
+
+  const currentSettings = settingsByCategory[activeCategory] || []
+  const hasChanges = changed.size > 0
 
   return (
-    <AdminLayout title="Settings" subtitle="Manage site configuration">
+    <AdminLayout
+      title="Site Settings"
+      subtitle="Manage site configuration — changes take effect immediately"
+      actions={
+        <div className="flex items-center gap-2">
+          {hasChanges && (
+            <span className="text-xs font-semibold text-brand-red bg-brand-red/10 px-3 py-1.5 rounded-full border border-brand-red/20">
+              {changed.size} unsaved change{changed.size > 1 ? 's' : ''}
+            </span>
+          )}
+          <button onClick={saveSettings} disabled={saving || !hasChanges || !can.editSettings}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-brand-green text-white text-sm font-semibold rounded-lg hover:bg-brand-green-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            {saving ? <RefreshCw size={14} className="animate-spin" /> : <Save size={14} />}
+            {saving ? 'Saving…' : 'Save Changes'}
+          </button>
+        </div>
+      }
+    >
+      {!can.editSettings && (
+        <div className="mb-6 p-4 rounded-xl flex items-center gap-3" style={{ background: 'rgba(189,36,39,0.08)', border: '1px solid rgba(189,36,39,0.2)' }}>
+          <Shield size={16} className="text-brand-red flex-shrink-0" />
+          <p className="text-sm text-brand-red font-medium">You have read-only access to settings. Contact a Super Admin to make changes.</p>
+        </div>
+      )}
+
       <div className="flex gap-6">
-        {/* Sidebar tabs */}
+        {/* Sidebar */}
         <div className="w-48 flex-shrink-0">
           <nav className="space-y-1">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === tab.id ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-              >
-                <tab.icon size={16} />
-                {tab.label}
+            {CATEGORIES.map(cat => (
+              <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
+                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+                style={{
+                  background: activeCategory === cat.id ? 'var(--brand-green)' : 'transparent',
+                  color: activeCategory === cat.id ? '#fff' : 'var(--text-secondary)',
+                }}
+                onMouseEnter={e => { if (activeCategory !== cat.id) (e.currentTarget.style.background = 'var(--bg-subtle)') }}
+                onMouseLeave={e => { if (activeCategory !== cat.id) (e.currentTarget.style.background = 'transparent') }}>
+                <cat.icon size={16} />
+                {cat.label}
+                {Array.from(changed).some(k => settingsByCategory[cat.id]?.some(s => s.key === k)) && (
+                  <span className="ml-auto w-2 h-2 bg-brand-red rounded-full" />
+                )}
               </button>
             ))}
           </nav>
+
+          {/* View site link */}
+          <div className="mt-6 pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+            <a href="/" target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs font-medium transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--brand-green)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+              <ExternalLink size={12} /> View Live Site
+            </a>
+          </div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="font-bold text-gray-900">{tabs.find(t => t.id === activeTab)?.label} Settings</h2>
-            <button onClick={save} disabled={saving} className="btn-secondary text-sm py-2 px-4 flex items-center gap-2 disabled:opacity-60">
-              {saving ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save size={15} />}
-              {saving ? 'Saving…' : 'Save Changes'}
-            </button>
+        <div className="flex-1 rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+          <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+            <h2 className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
+              {CATEGORIES.find(c => c.id === activeCategory)?.label} Settings
+            </h2>
+            {activeCategory === 'system' && !isSuperAdmin && (
+              <span className="text-xs font-semibold text-brand-red bg-brand-red/10 px-2.5 py-1 rounded-full">Super Admin Only</span>
+            )}
           </div>
 
           <div className="p-6 space-y-5">
-            {activeTab === 'general' && (
-              <>
-                <div>
-                  <label className="form-label">Organisation Name</label>
-                  <input value={general.name} onChange={e => setGeneral({ ...general, name: e.target.value })} className="form-input" />
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="h-3 skeleton rounded w-24" />
+                  <div className="h-10 skeleton rounded" />
                 </div>
-                <div>
-                  <label className="form-label">Tagline</label>
-                  <input value={general.tagline} onChange={e => setGeneral({ ...general, tagline: e.target.value })} className="form-input" />
-                </div>
-                <div>
-                  <label className="form-label">Main Description</label>
-                  <textarea value={general.description} onChange={e => setGeneral({ ...general, description: e.target.value })} rows={3} className="form-input resize-none" />
-                </div>
-                <div>
-                  <label className="form-label">FOCUS Kenya Description</label>
-                  <textarea value={general.focus_description} onChange={e => setGeneral({ ...general, focus_description: e.target.value })} rows={3} className="form-input resize-none" />
-                </div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                  <p className="text-yellow-800 text-xs font-semibold mb-1">⚠️ Note</p>
-                  <p className="text-yellow-700 text-xs">Settings saved here are for reference. To permanently update site content, edit <code className="bg-yellow-100 px-1 rounded">frontend/src/lib/data.ts</code> and redeploy.</p>
-                </div>
-              </>
-            )}
+              ))
+            ) : (
+              currentSettings.map(setting => {
+                const isChanged = changed.has(setting.key)
+                const isReadonly = setting.readonly || !can.editSettings
 
-            {activeTab === 'contact' && (
-              <>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="form-label">Phone Number</label>
-                    <input value={contact.phone} onChange={e => setContact({ ...contact, phone: e.target.value })} className="form-input" />
-                  </div>
-                  <div>
-                    <label className="form-label">Email Address</label>
-                    <input value={contact.email} onChange={e => setContact({ ...contact, email: e.target.value })} className="form-input" />
-                  </div>
-                </div>
-                <div>
-                  <label className="form-label">Primary Address</label>
-                  <input value={contact.address} onChange={e => setContact({ ...contact, address: e.target.value })} className="form-input" />
-                </div>
-                <div>
-                  <label className="form-label">Secondary Address</label>
-                  <input value={contact.address2} onChange={e => setContact({ ...contact, address2: e.target.value })} className="form-input" />
-                </div>
-                <div className="border-t border-gray-100 pt-5">
-                  <h3 className="font-bold text-gray-900 text-sm mb-4">MPESA Giving</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="form-label">Paybill Number</label>
-                      <input value={contact.mpesa_paybill} onChange={e => setContact({ ...contact, mpesa_paybill: e.target.value })} className="form-input" />
+                return (
+                  <motion.div key={setting.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="form-label mb-0">{setting.label}</label>
+                      {isChanged && (
+                        <span className="text-[10px] font-bold text-brand-red bg-brand-red/10 px-2 py-0.5 rounded-full">Modified</span>
+                      )}
                     </div>
-                    <div>
-                      <label className="form-label">Account Number</label>
-                      <input value={contact.mpesa_account} onChange={e => setContact({ ...contact, mpesa_account: e.target.value })} className="form-input" />
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t border-gray-100 pt-5">
-                  <h3 className="font-bold text-gray-900 text-sm mb-4">Bank Details</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="form-label">Bank Name</label>
-                      <input value={contact.bank_name} onChange={e => setContact({ ...contact, bank_name: e.target.value })} className="form-input" />
-                    </div>
-                    <div>
-                      <label className="form-label">Account Name</label>
-                      <input value={contact.bank_account_name} onChange={e => setContact({ ...contact, bank_account_name: e.target.value })} className="form-input" />
-                    </div>
-                    <div>
-                      <label className="form-label">Account Number</label>
-                      <input value={contact.bank_account_number} onChange={e => setContact({ ...contact, bank_account_number: e.target.value })} className="form-input" />
-                    </div>
-                    <div>
-                      <label className="form-label">SWIFT Code</label>
-                      <input value={contact.bank_swift} onChange={e => setContact({ ...contact, bank_swift: e.target.value })} className="form-input" />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
+                    {setting.description && (
+                      <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>{setting.description}</p>
+                    )}
 
-            {activeTab === 'social' && (
-              <>
-                <p className="text-gray-500 text-sm">Update your social media profile URLs.</p>
-                {Object.entries(social).map(([platform, url]) => (
-                  <div key={platform}>
-                    <label className="form-label capitalize">{platform}</label>
-                    <input value={url} onChange={e => setSocial({ ...social, [platform]: e.target.value })} placeholder={`https://${platform}.com/HesabikaTrust`} className="form-input" />
-                  </div>
-                ))}
-              </>
-            )}
-
-            {activeTab === 'security' && (
-              <div className="space-y-5">
-                <div className="bg-brand-green/5 border border-brand-green/20 rounded-xl p-5">
-                  <h3 className="font-bold text-brand-green text-sm mb-2 flex items-center gap-2"><Shield size={16} /> Authentication</h3>
-                  <p className="text-gray-600 text-sm">Authentication is handled by Supabase Auth. To manage admin users, go to your Supabase dashboard → Authentication → Users.</p>
-                  <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-brand-green text-sm font-semibold mt-3 hover:underline">
-                    Open Supabase Dashboard →
-                  </a>
-                </div>
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Row Level Security</h3>
-                  <p className="text-gray-600 text-sm">All database tables have RLS enabled. Public users can only read published content and submit forms. Admin operations require authentication.</p>
-                </div>
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
-                  <h3 className="font-bold text-gray-900 text-sm mb-2">Environment Variables</h3>
-                  <p className="text-gray-600 text-sm mb-3">Sensitive keys are stored as Vercel environment variables — never in code.</p>
-                  <div className="space-y-1.5 font-mono text-xs">
-                    {['SUPABASE_URL', 'SUPABASE_SECRET_KEY', 'RESEND_API_KEY', 'CLOUDINARY_API_SECRET'].map(key => (
-                      <div key={key} className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-brand-green rounded-full" />
-                        <span className="text-gray-600">{key}</span>
-                        <span className="text-gray-400">= ••••••••</span>
+                    {setting.type === 'textarea' ? (
+                      <textarea
+                        value={settings[setting.key] || ''}
+                        onChange={e => !isReadonly && updateSetting(setting.key, e.target.value)}
+                        rows={3}
+                        disabled={isReadonly}
+                        className="form-input resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                    ) : setting.type === 'toggle' ? (
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => !isReadonly && updateSetting(setting.key, settings[setting.key] === 'true' ? 'false' : 'true')}
+                          disabled={isReadonly}
+                          className="relative w-12 h-6 rounded-full transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          style={{ background: settings[setting.key] === 'true' ? 'var(--brand-green)' : 'var(--bg-muted)' }}>
+                          <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${settings[setting.key] === 'true' ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                        </button>
+                        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                          {settings[setting.key] === 'true' ? 'Enabled' : 'Disabled'}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+                    ) : (
+                      <input
+                        type="text"
+                        value={settings[setting.key] || ''}
+                        onChange={e => !isReadonly && updateSetting(setting.key, e.target.value)}
+                        disabled={isReadonly}
+                        className="form-input disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{ borderColor: isChanged ? 'var(--brand-green)' : undefined }}
+                      />
+                    )}
+                  </motion.div>
+                )
+              })
+            )}
+
+            {activeCategory === 'system' && isSuperAdmin && (
+              <div className="mt-6 pt-5 space-y-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                <h4 className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>Danger Zone</h4>
+                <div className="p-4 rounded-xl" style={{ background: 'rgba(189,36,39,0.06)', border: '1px solid rgba(189,36,39,0.2)' }}>
+                  <p className="text-sm font-semibold text-brand-red mb-1">Clear All Cache</p>
+                  <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>Force all pages to reload fresh data from the database.</p>
+                  <button onClick={() => toast.success('Cache cleared — pages will reload fresh data')}
+                    className="text-xs font-bold text-brand-red bg-brand-red/10 px-4 py-2 rounded-lg hover:bg-brand-red/20 transition-colors">
+                    Clear Cache
+                  </button>
                 </div>
               </div>
             )}

@@ -29,6 +29,7 @@ import AdminApplicationsPage from '@/pages/admin/AdminApplicationsPage'
 import { AdminBoardPage, AdminSecretariatAdminPage, AdminInternsAdminPage, AdminElproFellowsPage } from '@/pages/admin/AdminTeamPage'
 import AdminNewsletterPage from '@/pages/admin/AdminNewsletterPage'
 import AdminSettingsPage from '@/pages/admin/AdminSettingsPage'
+import AdminUsersPage from '@/pages/admin/AdminUsersPage'
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
       <Route path="/admin/elpro" element={<ProtectedRoute><AdminElproFellowsPage /></ProtectedRoute>} />
       <Route path="/admin/newsletter" element={<ProtectedRoute><AdminNewsletterPage /></ProtectedRoute>} />
       <Route path="/admin/settings" element={<ProtectedRoute><AdminSettingsPage /></ProtectedRoute>} />
+      <Route path="/admin/users" element={<ProtectedRoute><AdminUsersPage /></ProtectedRoute>} />
 
       {/* ── Public routes (with Layout) ── */}
       <Route path="/*" element={
