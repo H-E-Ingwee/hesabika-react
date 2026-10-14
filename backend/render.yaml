@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: hesabika-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: SUPABASE_URL
+        fromGroup: hesabika-secrets
+      - key: SUPABASE_SECRET_KEY
+        fromGroup: hesabika-secrets
+      - key: RESEND_API_KEY
+        fromGroup: hesabika-secrets
+      - key: CLOUDINARY_API_SECRET
+        fromGroup: hesabika-secrets
+      - key: FRONTEND_URL
+        value: https://hesabika-trust.vercel.app
+      - key: JWT_SECRET
+        generateValue: true
