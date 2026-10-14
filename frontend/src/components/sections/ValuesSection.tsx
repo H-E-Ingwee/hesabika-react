@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import { HeartHandshake, Star, Scale, Sprout, ClipboardList, Globe } from 'lucide-react'
 import { VALUES } from '@/lib/data'
 import SectionHeader from '../ui/SectionHeader'
+
+const VALUE_ICONS = [HeartHandshake, Star, Scale, Sprout, ClipboardList, Globe]
 
 export default function ValuesSection() {
   const [flipped, setFlipped] = useState<number | null>(null)
@@ -29,69 +32,68 @@ export default function ValuesSection() {
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5 rounded-2xl overflow-hidden">
-          {VALUES.map((value, i) => (
-            <motion.div
-              key={value.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="relative"
-              style={{ perspective: '1000px' }}
-            >
-              <div
-                className="relative cursor-pointer"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                  transform: flipped === i ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                  minHeight: '220px',
-                }}
-                onClick={() => setFlipped(flipped === i ? null : i)}
+          {VALUES.map((value, i) => {
+            const Icon = VALUE_ICONS[i]
+            return (
+              <motion.div
+                key={value.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="relative"
+                style={{ perspective: '1000px' }}
               >
-                {/* Front */}
                 <div
-                  className="absolute inset-0 bg-[#1a1a1a] p-7 flex flex-col group hover:bg-[#1e1e1e] transition-colors duration-200"
-                  style={{ backfaceVisibility: 'hidden' }}
-                >
-                  <div className="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-brand-red transition-colors duration-300">
-                    {value.icon}
-                  </div>
-                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2">
-                    {value.title}
-                  </h4>
-                  <p className="text-white/40 text-xs leading-relaxed line-clamp-3">
-                    {value.covenant.slice(0, 100)}...
-                  </p>
-                  <div className="mt-auto pt-3">
-                    <span className="text-brand-red text-xs font-semibold">
-                      Tap to read covenant →
-                    </span>
-                  </div>
-                  {/* Bottom accent */}
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-red scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                </div>
-
-                {/* Back */}
-                <div
-                  className="absolute inset-0 bg-brand-red p-7 flex flex-col"
+                  className="relative cursor-pointer"
                   style={{
-                    backfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transform: flipped === i ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                    minHeight: '220px',
                   }}
+                  onClick={() => setFlipped(flipped === i ? null : i)}
                 >
-                  <div className="text-white/80 text-xs font-bold uppercase tracking-widest mb-3">
-                    {value.title} Covenant
+                  {/* Front */}
+                  <div
+                    className="absolute inset-0 bg-[#1a1a1a] p-7 flex flex-col group hover:bg-[#1e1e1e] transition-colors duration-200"
+                    style={{ backfaceVisibility: 'hidden' }}
+                  >
+                    <div className="w-11 h-11 bg-brand-red/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-red transition-colors duration-300">
+                      <Icon size={20} className="text-brand-red group-hover:text-white transition-colors duration-300" />
+                    </div>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2">
+                      {value.title}
+                    </h4>
+                    <p className="text-white/40 text-xs leading-relaxed line-clamp-3">
+                      {value.covenant.slice(0, 100)}…
+                    </p>
+                    <div className="mt-auto pt-3">
+                      <span className="text-brand-red text-xs font-semibold">
+                        Tap to read covenant
+                      </span>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-red scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                   </div>
-                  <p className="text-white/90 text-sm leading-relaxed flex-1">
-                    {value.covenant}
-                  </p>
-                  <button className="mt-3 text-white/60 text-xs font-semibold hover:text-white transition-colors">
-                    ← Tap to close
-                  </button>
+
+                  {/* Back */}
+                  <div
+                    className="absolute inset-0 bg-brand-red p-7 flex flex-col"
+                    style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                  >
+                    <div className="text-white/80 text-xs font-bold uppercase tracking-widest mb-3">
+                      {value.title} Covenant
+                    </div>
+                    <p className="text-white/90 text-sm leading-relaxed flex-1">
+                      {value.covenant}
+                    </p>
+                    <button className="mt-3 text-white/60 text-xs font-semibold hover:text-white transition-colors text-left">
+                      Tap to close
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

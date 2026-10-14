@@ -1,7 +1,12 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle } from 'lucide-react'
+import { ArrowRight, CheckCircle, Scale, Wrench, Building2, Landmark, Banknote, GraduationCap, ClipboardList, Megaphone } from 'lucide-react'
+
+const FIELD_ICONS: Record<string, React.ElementType> = {
+  'scale': Scale, 'wrench': Wrench, 'hospital': Building2, 'landmark': Landmark,
+  'banknote': Banknote, 'graduation-cap': GraduationCap, 'clipboard': ClipboardList, 'megaphone': Megaphone,
+}
 import PageHero from '@/components/ui/PageHero'
 import SectionHeader from '@/components/ui/SectionHeader'
 import AnimatedSection from '@/components/ui/AnimatedSection'
@@ -18,14 +23,14 @@ const mentorQualities = [
 ]
 
 const mentorFields = [
-  { field: 'Law / Legal', icon: '⚖️' },
-  { field: 'Engineering', icon: '🔧' },
-  { field: 'Medicine / Health', icon: '🏥' },
-  { field: 'Public Administration', icon: '🏛️' },
-  { field: 'Finance', icon: '💰' },
-  { field: 'Academia', icon: '🎓' },
-  { field: 'Public Policy', icon: '📋' },
-  { field: 'Communications', icon: '📢' },
+  { field: 'Law / Legal', icon: 'scale' },
+  { field: 'Engineering', icon: 'wrench' },
+  { field: 'Medicine / Health', icon: 'hospital' },
+  { field: 'Public Administration', icon: 'landmark' },
+  { field: 'Finance', icon: 'banknote' },
+  { field: 'Academia', icon: 'graduation-cap' },
+  { field: 'Public Policy', icon: 'clipboard' },
+  { field: 'Communications', icon: 'megaphone' },
 ]
 
 export default function MentorsPage() {
@@ -127,14 +132,19 @@ export default function MentorsPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-14">
-            {mentorFields.map((item, i) => (
-              <AnimatedSection key={item.field} delay={i * 0.06}>
-                <div className="bg-white rounded-xl p-5 text-center border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-                  <div className="text-3xl mb-2">{item.icon}</div>
-                  <p className="text-gray-700 text-sm font-semibold">{item.field}</p>
-                </div>
-              </AnimatedSection>
-            ))}
+            {mentorFields.map((item, i) => {
+              const Icon = FIELD_ICONS[item.icon] || Scale
+              return (
+                <AnimatedSection key={item.field} delay={i * 0.06}>
+                  <div className="bg-white rounded-xl p-5 text-center border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                    <div className="w-10 h-10 bg-brand-green/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                      <Icon size={18} className="text-brand-green" />
+                    </div>
+                    <p className="text-gray-700 text-sm font-semibold">{item.field}</p>
+                  </div>
+                </AnimatedSection>
+              )
+            })}
           </div>
 
           {/* Secretariat as mentor representatives */}

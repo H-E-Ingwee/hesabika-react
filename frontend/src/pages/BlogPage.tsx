@@ -239,7 +239,7 @@ export default function BlogPage() {
                 transition={{ duration: 0.35 }}
                 className="text-center py-16 bg-gray-50 rounded-2xl"
               >
-                <div className="text-5xl mb-4">📰</div>
+                <div className="w-16 h-16 bg-brand-green/10 rounded-2xl flex items-center justify-center mx-auto mb-4"><Newspaper size={28} className="text-brand-green" /></div>
                 <h3 className="font-serif font-bold text-2xl text-gray-900 mb-3">ACT Bulletin</h3>
                 <p className="text-gray-500 max-w-md mx-auto mb-6 leading-relaxed">
                   The ACT (Accountability, Courage and Transformation) Bulletin is Hesabika's quarterly newsletter featuring stories, insights and updates from across our programmes.

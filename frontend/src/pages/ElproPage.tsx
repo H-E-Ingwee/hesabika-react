@@ -35,7 +35,7 @@ export default function ElproPage() {
             <div className="flex items-center gap-3">
               <span className="w-2 h-2 bg-white rounded-full animate-pulse flex-shrink-0" />
               <p className="text-white text-sm font-semibold">
-                🎉 ELPro Inaugural Cohort — Launched April 11, 2026 · 23 Fellows Enrolled
+                ELPro Inaugural Cohort — Launched April 11, 2026 · 23 Fellows Enrolled
               </p>
             </div>
             <span className="text-white/70 text-xs font-medium">April 2026 – April 2027</span>

@@ -41,39 +41,41 @@ export const STATS = [
   { value: 2016, suffix: '', label: 'Founded' },
 ]
 
+
+
 export const VALUES = [
   {
-    icon: '🤝',
+    icon: 'heart-handshake',
     title: 'Integrity',
     covenant:
       'I covenant to practice and model the highest standards of personal and professional integrity in everything I do. I will not accept or give a bribe or be involved in any form of corruption as an individual or in my corporate responsibilities.',
   },
   {
-    icon: '⭐',
+    icon: 'star',
     title: 'Excellence',
     covenant:
       "I covenant to pursue excellence in my daily vocation and work as unto God, using my talents and opportunities to bring healing and restoration to a broken world. I will abhor selfish ambition and trust God to help me love Him with all my heart, mind and soul and love my neighbor as I love myself.",
   },
   {
-    icon: '⚖️',
+    icon: 'scale',
     title: 'Unity & Justice',
     covenant:
       "I covenant to actively engage in promoting peace, justice, and good governance for the common good. All Kenyans are my brothers and sisters and I will not look down on any of them or discriminate on the basis of age, tribe, gender, race, or religion.",
   },
   {
-    icon: '🌱',
+    icon: 'sprout',
     title: 'Transformation',
     covenant:
       "I covenant to promote godly values in all my interactions at personal, family, community, and national levels. I will network with other like-minded people to foster positive change in economic, social and spiritual well-being of our nation.",
   },
   {
-    icon: '📋',
+    icon: 'clipboard',
     title: 'Accountability',
     covenant:
       'I covenant to be accountable to God, and to at least one other person; mentor and be mentored by others, in order to grow in my commitment to God, my family, and my country.',
   },
   {
-    icon: '🌍',
+    icon: 'globe',
     title: 'Stewardship',
     covenant:
       'I covenant to sacrifice time, money, and opportunities in order to promote and serve the Kingdom of God wherever I am, all for the glory of God.',
@@ -244,7 +246,7 @@ export const ELPRO = {
 export const CAUCUSES = [
   {
     id: 'governance',
-    icon: '🏛️',
+    icon: 'landmark',
     title: 'Governance & Civic Education',
     convenor: 'Paul Mungai',
     color: 'green',
@@ -262,7 +264,7 @@ export const CAUCUSES = [
   },
   {
     id: 'economy',
-    icon: '💰',
+    icon: 'banknote',
     title: 'Economy',
     convenor: 'Dr. Rugo',
     color: 'red',
@@ -280,7 +282,7 @@ export const CAUCUSES = [
   },
   {
     id: 'education',
-    icon: '📚',
+    icon: 'book',
     title: 'Education',
     convenor: 'Dr. Lynette Kisaka',
     color: 'green',
@@ -298,7 +300,7 @@ export const CAUCUSES = [
   },
   {
     id: 'theology',
-    icon: '✝️',
+    icon: 'cross',
     title: 'Public Theology',
     convenor: 'Mr. Frederick Abuya',
     color: 'red',
@@ -316,7 +318,7 @@ export const CAUCUSES = [
   },
   {
     id: 'health',
-    icon: '🏥',
+    icon: 'building2',
     title: 'Health',
     convenor: 'Racheal Kitonyo & Prof. Ojuka',
     color: 'green',
@@ -335,14 +337,14 @@ export const CAUCUSES = [
 
 // ── ADVOCACY AREAS — NEW ─────────────────────────────────────
 export const ADVOCACY_AREAS = [
-  { id: 'corruption', icon: '⚖️', title: 'Corruption & Governance', description: "SOE mismanagement, opaque procurement, cronyism, and public funds theft undermine Kenya's development. Hesabika calls Christians to refuse complicity and demand accountability.", biblical: '8th Commandment, Imago Dei, covenant accountability', color: 'red' },
-  { id: 'economy', icon: '💼', title: 'Economic Inequality', description: '39.8% youth unemployment, poverty in ASALs and informal settlements, and limited capital access demand a prophetic response from Kenya\'s Christian community.', biblical: 'Gleaning laws (Lev. 19:9–10), Amos 2:6, preferential concern for the poor', color: 'green' },
-  { id: 'education', icon: '📖', title: 'Education', description: 'The CBC transition, education financing gaps, school unrest, and out-of-school children require informed Christian advocacy for the holistic formation of Kenya\'s children.', biblical: 'Shalom — holistic human flourishing; formation of whole human beings', color: 'red' },
-  { id: 'ethnic', icon: '🤝', title: 'Ethnic Division', description: 'The 2027 election cycle risks intensifying ethnic mobilisation and political hooliganism. The church must model inter-ethnic reconciliation as a gospel witness.', biblical: 'Baptism over blood; inter-ethnic reconciliation as gospel witness', color: 'green' },
-  { id: 'land', icon: '🌾', title: 'Land Justice', description: 'Colonial dispossession, pastoralist displacement, and urban landlessness continue to marginalise millions of Kenyans. Land justice is a biblical imperative.', biblical: "Jubilee (Lev. 25), Naboth's vineyard (1 Kings 21)", color: 'red' },
-  { id: 'gender', icon: '👥', title: 'Gender Justice', description: 'Non-implementation of the two-thirds gender rule, GBV, FGM, and girls\' education gaps demand a church that affirms the full humanity of women as image-bearers.', biblical: 'Galatians 3:28; full humanity of women as image-bearers', color: 'green' },
-  { id: 'environment', icon: '🌿', title: 'Environmental Stewardship', description: "Deforestation, climate change, ASAL droughts, and water access crises call Christians to faithful stewardship of God's creation.", biblical: "Genesis 2:15 (stewardship mandate); Laudato Si'", color: 'red' },
-  { id: 'mental-health', icon: '💚', title: 'Mental Health', description: 'Under-resourced services, stigma, COVID-19 aftermath, economic pressure, and urban isolation create a mental health crisis that demands compassionate pastoral and clinical response.', biblical: 'Compassionate pastoral care integrating spiritual and clinical approaches', color: 'green' },
+  { id: 'corruption', icon: 'scale', title: 'Corruption & Governance', description: "SOE mismanagement, opaque procurement, cronyism, and public funds theft undermine Kenya's development. Hesabika calls Christians to refuse complicity and demand accountability.", biblical: '8th Commandment, Imago Dei, covenant accountability', color: 'red' },
+  { id: 'economy', icon: 'briefcase', title: 'Economic Inequality', description: '39.8% youth unemployment, poverty in ASALs and informal settlements, and limited capital access demand a prophetic response from Kenya\'s Christian community.', biblical: 'Gleaning laws (Lev. 19:9–10), Amos 2:6, preferential concern for the poor', color: 'green' },
+  { id: 'education', icon: 'book-open', title: 'Education', description: 'The CBC transition, education financing gaps, school unrest, and out-of-school children require informed Christian advocacy for the holistic formation of Kenya\'s children.', biblical: 'Shalom — holistic human flourishing; formation of whole human beings', color: 'red' },
+  { id: 'ethnic', icon: 'heart-handshake', title: 'Ethnic Division', description: 'The 2027 election cycle risks intensifying ethnic mobilisation and political hooliganism. The church must model inter-ethnic reconciliation as a gospel witness.', biblical: 'Baptism over blood; inter-ethnic reconciliation as gospel witness', color: 'green' },
+  { id: 'land', icon: 'wheat', title: 'Land Justice', description: 'Colonial dispossession, pastoralist displacement, and urban landlessness continue to marginalise millions of Kenyans. Land justice is a biblical imperative.', biblical: "Jubilee (Lev. 25), Naboth's vineyard (1 Kings 21)", color: 'red' },
+  { id: 'gender', icon: 'users', title: 'Gender Justice', description: 'Non-implementation of the two-thirds gender rule, GBV, FGM, and girls\' education gaps demand a church that affirms the full humanity of women as image-bearers.', biblical: 'Galatians 3:28; full humanity of women as image-bearers', color: 'green' },
+  { id: 'environment', icon: 'leaf', title: 'Environmental Stewardship', description: "Deforestation, climate change, ASAL droughts, and water access crises call Christians to faithful stewardship of God's creation.", biblical: "Genesis 2:15 (stewardship mandate); Laudato Si'", color: 'red' },
+  { id: 'mental-health', icon: 'heart-pulse', title: 'Mental Health', description: 'Under-resourced services, stigma, COVID-19 aftermath, economic pressure, and urban isolation create a mental health crisis that demands compassionate pastoral and clinical response.', biblical: 'Compassionate pastoral care integrating spiritual and clinical approaches', color: 'green' },
 ]
 
 // ── STRATEGIC PLAN 2026–2030 — NEW ──────────────────────────
@@ -352,10 +354,10 @@ export const STRATEGIC_PLAN = {
   vision: 'A FOCUS Kenya that is simultaneously evangelistic and prophetic, personally formative and publicly engaged.',
   quote: '"We stand steadfast in the pursuit of a holistic blend of Christian values infusing Society." — Hesabika Handover Notes, 2026',
   mandates: [
-    { number: '01', title: 'Awareness', icon: '👁️', description: "Raising consciousness among FOCUS Kenya constituents about Kenya's pressing social, governance, economic, and educational challenges through webinars, publications, social media, and caucus discussions." },
-    { number: '02', title: 'Advocacy', icon: '📢', description: 'Engaging structures, policies, and power on behalf of justice — including memoranda to Parliament, public participation in government processes, engagement with regulatory bodies, and prophetic public statements.' },
-    { number: '03', title: 'Capacity Building', icon: '🎓', description: 'Equipping associates, students, and communities with the knowledge, skills, and frameworks needed for effective civic engagement — including the Civic Education Curriculum, ELPro, Advocacy Teams, and caucus training.' },
-    { number: '04', title: 'Partnerships', icon: '🤝', description: 'Collaborating with like-minded organisations for greater impact — including the Katiba Movement, EACC, PSC, Kenya School of Government, and the Kenya National Prayer and Transformational Movement.' },
+    { number: '01', title: 'Awareness', icon: 'eye', description: "Raising consciousness among FOCUS Kenya constituents about Kenya's pressing social, governance, economic, and educational challenges through webinars, publications, social media, and caucus discussions." },
+    { number: '02', title: 'Advocacy', icon: 'megaphone', description: 'Engaging structures, policies, and power on behalf of justice — including memoranda to Parliament, public participation in government processes, engagement with regulatory bodies, and prophetic public statements.' },
+    { number: '03', title: 'Capacity Building', icon: 'graduation-cap', description: 'Equipping associates, students, and communities with the knowledge, skills, and frameworks needed for effective civic engagement — including the Civic Education Curriculum, ELPro, Advocacy Teams, and caucus training.' },
+    { number: '04', title: 'Partnerships', icon: 'heart-handshake', description: 'Collaborating with like-minded organisations for greater impact — including the Katiba Movement, EACC, PSC, Kenya School of Government, and the Kenya National Prayer and Transformational Movement.' },
   ],
   deliverables: [
     'Societal Transformation Manual (by end of 2026)',

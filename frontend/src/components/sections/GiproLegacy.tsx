@@ -1,13 +1,12 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { ArrowRight, Award, Users, MapPin } from 'lucide-react'
+import { ArrowRight, Users, Award, MapPin } from 'lucide-react'
 import { GIPRO_INTERNS } from '@/lib/data'
 import SectionHeader from '../ui/SectionHeader'
 
 export default function GiproLegacy() {
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
-  // Show a sample of interns
   const featured = GIPRO_INTERNS.slice(0, 10)
 
   return (
@@ -20,7 +19,7 @@ export default function GiproLegacy() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 bg-gray-100 text-gray-500 text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full mb-4">
+            <div className="inline-flex items-center gap-2 bg-gray-100 text-gray-500 text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full mb-4 border border-gray-200">
               <Award size={12} />
               2021 – 2023 · Programme Completed
             </div>
@@ -97,15 +96,11 @@ export default function GiproLegacy() {
                     src={intern.image}
                     alt={intern.name}
                     className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-400"
-                    onError={(e) => {
-                      const el = e.target as HTMLImageElement
-                      el.src = '/images/board-Hesabika-Noimg.jpg'
-                    }}
+                    onError={(e) => { (e.target as HTMLImageElement).src = '/images/board-Hesabika-Noimg.jpg' }}
                   />
                 </div>
               </motion.div>
             ))}
-            {/* +more indicator */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}

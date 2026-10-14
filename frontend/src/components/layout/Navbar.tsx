@@ -144,7 +144,7 @@ export default function Navbar() {
                 to="/elpro"
                 className="hidden lg:inline-flex items-center gap-1.5 text-xs font-bold text-brand-green border border-brand-green/30 bg-brand-green/5 px-3 py-1.5 rounded-full hover:bg-brand-green hover:text-white transition-all duration-200"
               >
-                ELPro ✦
+                ELPro
               </Link>
               <Link
                 to="/get-involved"
@@ -254,7 +254,7 @@ export default function Navbar() {
               ))}
               <div className="pt-6 space-y-3">
                 <Link to="/elpro" className="btn-outline-green w-full justify-center">
-                  ELPro — Ethical Leaders Program ✦
+                  ELPro — Ethical Leaders Program 
                 </Link>
                 <Link to="/get-involved" className="btn-primary w-full justify-center">
                   Get Involved

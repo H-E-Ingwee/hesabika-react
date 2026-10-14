@@ -112,7 +112,7 @@ export default function GiproSection() {
 
             {/* MPESA highlight */}
             <div className="bg-brand-green/8 border border-brand-green/20 rounded-xl p-4 mb-6">
-              <p className="text-brand-green text-sm font-semibold mb-1">💚 Support an Intern — KES 1,000/month</p>
+              <p className="text-brand-green text-sm font-semibold mb-1"> Support an Intern — KES 1,000/month</p>
               <p className="text-gray-600 text-xs">MPESA Paybill: <strong>769936</strong> · Account: <strong>GIPro</strong></p>
             </div>
 

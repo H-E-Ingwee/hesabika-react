@@ -2,16 +2,32 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
-import { ChevronDown, ArrowRight } from 'lucide-react'
+import { ChevronDown, ArrowRight, Landmark, Banknote, BookOpen, Cross, Building2, Eye, Megaphone, GraduationCap, HeartHandshake } from 'lucide-react'
 import PageHero from '@/components/ui/PageHero'
 import SectionHeader from '@/components/ui/SectionHeader'
 import AnimatedSection from '@/components/ui/AnimatedSection'
 import CTASection from '@/components/sections/CTASection'
 import { CAUCUSES, STRATEGIC_PLAN } from '@/lib/data'
 
+const CAUCUS_ICONS: Record<string, React.ElementType> = {
+  'landmark': Landmark,
+  'banknote': Banknote,
+  'book': BookOpen,
+  'cross': Cross,
+  'hospital': Building2,
+}
+
+const MANDATE_ICONS: Record<string, React.ElementType> = {
+  'eye': Eye,
+  'megaphone': Megaphone,
+  'graduation-cap': GraduationCap,
+  'heart-handshake': HeartHandshake,
+}
+
 function CaucusCard({ caucus, index }: { caucus: typeof CAUCUSES[0]; index: number }) {
   const [expanded, setExpanded] = useState(false)
   const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
+  const Icon = CAUCUS_ICONS[caucus.icon] || Landmark
 
   const colorClasses = {
     green: { bg: 'bg-brand-green', light: 'bg-brand-green/8', text: 'text-brand-green', border: 'border-brand-green' },
@@ -33,13 +49,15 @@ function CaucusCard({ caucus, index }: { caucus: typeof CAUCUSES[0]; index: numb
         <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10" />
         <div className="relative z-10 flex items-start justify-between">
           <div>
-            <div className="text-4xl mb-3">{caucus.icon}</div>
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+              <Icon size={20} className="text-white" />
+            </div>
             <h3 className="font-serif font-bold text-white text-xl mb-1">{caucus.title}</h3>
             <p className="text-white/70 text-xs font-semibold uppercase tracking-wider">
               Convenor: {caucus.convenor}
             </p>
           </div>
-          <span className="text-white/30 font-serif font-black text-5xl leading-none">
+          <span className="text-white/20 font-serif font-black text-5xl leading-none">
             0{index + 1}
           </span>
         </div>
@@ -61,10 +79,7 @@ function CaucusCard({ caucus, index }: { caucus: typeof CAUCUSES[0]; index: numb
           className="w-full flex items-center justify-between text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors py-2"
         >
           <span>Focus Areas ({caucus.focus_areas.length})</span>
-          <ChevronDown
-            size={16}
-            className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
-          />
+          <ChevronDown size={16} className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
         </button>
 
         <AnimatePresence>
@@ -79,7 +94,7 @@ function CaucusCard({ caucus, index }: { caucus: typeof CAUCUSES[0]; index: numb
               <ul className="space-y-2 pt-2">
                 {caucus.focus_areas.map((area, i) => (
                   <li key={i} className="flex gap-2 items-start text-sm text-gray-500">
-                    <span className={`${c.text} mt-1 flex-shrink-0`}>•</span>
+                    <ArrowRight size={13} className={`${c.text} mt-0.5 flex-shrink-0`} />
                     {area}
                   </li>
                 ))}
@@ -109,12 +124,7 @@ export default function CaucusesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection direction="left">
-              <SectionHeader
-                label="The Caucus Model"
-                title="Distributed Leadership for Maximum Impact"
-                labelColor="red"
-                dividerColor="red"
-              />
+              <SectionHeader label="The Caucus Model" title="Distributed Leadership for Maximum Impact" labelColor="red" dividerColor="red" />
               <div className="space-y-4 text-gray-500 leading-relaxed">
                 <p>
                   The caucus model is one of Hesabika's most important structural innovations. Recognising that the Secretariat cannot do everything on its own, Hesabika has established five thematic caucus groups, each chaired by a volunteer champion who is an expert or deeply engaged practitioner in their field.
@@ -132,21 +142,23 @@ export default function CaucusesPage() {
             </AnimatedSection>
 
             <AnimatedSection direction="right" delay={0.1}>
-              {/* SP Mandates mini */}
               <div className="bg-[#0d0d0d] rounded-2xl p-8">
                 <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-5">SP 2026–2030 Mandates</p>
                 <div className="space-y-4">
-                  {STRATEGIC_PLAN.mandates.map((m, i) => (
-                    <div key={m.title} className="flex gap-4 items-start">
-                      <div className={`w-10 h-10 min-w-[40px] rounded-xl flex items-center justify-center text-lg ${i % 2 === 0 ? 'bg-brand-red/15' : 'bg-brand-green/15'}`}>
-                        {m.icon}
+                  {STRATEGIC_PLAN.mandates.map((m, i) => {
+                    const Icon = MANDATE_ICONS[m.icon] || Eye
+                    return (
+                      <div key={m.title} className="flex gap-4 items-start">
+                        <div className={`w-10 h-10 min-w-[40px] rounded-xl flex items-center justify-center ${i % 2 === 0 ? 'bg-brand-red/15' : 'bg-brand-green/15'}`}>
+                          <Icon size={18} className={i % 2 === 0 ? 'text-brand-red' : 'text-brand-green'} />
+                        </div>
+                        <div>
+                          <h5 className="text-white font-bold text-sm mb-0.5">{m.number} — {m.title}</h5>
+                          <p className="text-white/50 text-xs leading-relaxed line-clamp-2">{m.description}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h5 className="text-white font-bold text-sm mb-0.5">{m.number} — {m.title}</h5>
-                        <p className="text-white/50 text-xs leading-relaxed line-clamp-2">{m.description}</p>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             </AnimatedSection>
@@ -167,9 +179,7 @@ export default function CaucusesPage() {
               label="Our Five Caucuses"
               title="Thematic Working Groups"
               description="Each caucus is led by an expert volunteer convenor and engages Kenya's most pressing challenges from a biblical and values-driven standpoint."
-              center
-              labelColor="red"
-              dividerColor="red"
+              center labelColor="red" dividerColor="red"
             />
           </motion.div>
 
@@ -226,9 +236,7 @@ export default function CaucusesPage() {
             label="Get Involved"
             title="Join a Caucus"
             description="Are you an expert or practitioner passionate about one of these areas? Hesabika's caucuses welcome engaged Kenyans who want to translate their concern into action."
-            center
-            labelColor="green"
-            dividerColor="green"
+            center labelColor="green" dividerColor="green"
           />
           <div className="mt-8 flex flex-wrap gap-4 justify-center">
             <Link to="/contact" className="btn-secondary">
