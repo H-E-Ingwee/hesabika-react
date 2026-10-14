@@ -58,13 +58,7 @@ Go to **Project Settings → Environment Variables** and add:
 
 | Variable | Value |
 |---|---|
-| `SUPABASE_URL` | `https://ckmuptnnbnonmouynysh.supabase.co` |
-| `SUPABASE_SECRET_KEY` | `sb_secret_UqlyvBaimTtZn2Jsx-nZTA_JIWmLlLW` |
-| `VITE_SUPABASE_URL` | `https://ckmuptnnbnonmouynysh.supabase.co` |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_x-qrRT-bBDcfu-csjtuksQ_4jprIRwr` |
-| `RESEND_API_KEY` | `re_6rZjTgkr_BRGkggqTPYFNnqT5rTa7SRS9` |
-| `CLOUDINARY_API_SECRET` | `MSG-_kZUQOf1l1vDatdmI0i1cnY` |
-| `VITE_API_URL` | *(leave empty — uses same domain)* |
+|
 
 ### Step 5 — Deploy!
 Click **Deploy** → your app is live at `https://hesabika-react.vercel.app`
