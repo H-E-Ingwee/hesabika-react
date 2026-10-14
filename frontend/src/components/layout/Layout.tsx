@@ -4,19 +4,20 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import ScrollToTop from '../ui/ScrollToTop'
+import { useTheme } from '@/hooks/useTheme'
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
-const pageVariants = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -8 },
-}
-
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation()
+  const { theme } = useTheme()
+
+  // Apply theme to document
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+  }, [theme])
 
   // Scroll to top on route change
   useEffect(() => {
@@ -29,8 +30,7 @@ export default function Layout({ children }: LayoutProps) {
       setTimeout(() => {
         const el = document.querySelector(location.hash)
         if (el) {
-          const offset = 90
-          const top = el.getBoundingClientRect().top + window.scrollY - offset
+          const top = el.getBoundingClientRect().top + window.scrollY - 88
           window.scrollTo({ top, behavior: 'smooth' })
         }
       }, 300)
@@ -38,17 +38,16 @@ export default function Layout({ children }: LayoutProps) {
   }, [location])
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-base)' }}>
       <Navbar />
       <AnimatePresence mode="wait">
         <motion.main
           key={location.pathname}
-          variants={pageVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
-          className="flex-1 pt-[76px]"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="flex-1 pt-[73px]"
         >
           {children}
         </motion.main>
