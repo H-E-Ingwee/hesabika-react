@@ -45,24 +45,20 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-[76px]">
             {/* Logo */}
-            <Link to="/" className="flex-shrink-0">
+            <Link to="/" className="flex-shrink-0 flex items-center gap-2">
               <img
                 src="/images/logo.png"
                 alt="Hesabika Trust"
-                className="h-12 w-auto"
+                className="h-11 w-auto"
                 onError={(e) => {
                   const t = e.target as HTMLImageElement
                   t.style.display = 'none'
-                  t.nextElementSibling?.classList.remove('hidden')
                 }}
               />
-              <span className="hidden font-serif font-bold text-xl text-brand-green">
-                Hesabika Trust
-              </span>
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
+            <div className="hidden lg:flex items-center gap-0.5" ref={dropdownRef}>
               {NAV_LINKS.map((link) => (
                 <div
                   key={link.label}
@@ -80,6 +76,10 @@ export default function Navbar() {
                     )}
                   >
                     {link.label}
+                    {/* ELPro badge */}
+                    {link.label === 'Programmes' && (
+                      <span className="ml-1 text-[9px] font-black bg-brand-red text-white px-1.5 py-0.5 rounded-full uppercase tracking-wide">New</span>
+                    )}
                     {link.children && (
                       <ChevronDown
                         size={13}
@@ -99,7 +99,7 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.97 }}
                         transition={{ duration: 0.18 }}
-                        className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
+                        className="absolute top-full left-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
                       >
                         {link.children.map((child) =>
                           child.external ? (
@@ -117,9 +117,17 @@ export default function Navbar() {
                             <Link
                               key={child.label}
                               to={child.href}
-                              className="block px-4 py-2.5 text-sm text-gray-700 hover:text-brand-green hover:bg-brand-green/5 border-b border-gray-50 last:border-0 transition-all duration-150 hover:pl-5"
+                              className={cn(
+                                'flex items-center justify-between px-4 py-2.5 text-sm border-b border-gray-50 last:border-0 transition-all duration-150 hover:pl-5',
+                                child.label.includes('ELPro')
+                                  ? 'text-brand-green font-semibold hover:bg-brand-green/5'
+                                  : 'text-gray-700 hover:text-brand-green hover:bg-brand-green/5'
+                              )}
                             >
-                              {child.label}
+                              <span>{child.label}</span>
+                              {child.label.includes('ELPro') && (
+                                <span className="text-[9px] font-black bg-brand-red text-white px-1.5 py-0.5 rounded-full uppercase">New</span>
+                              )}
                             </Link>
                           )
                         )}
@@ -132,6 +140,12 @@ export default function Navbar() {
 
             {/* CTA + Hamburger */}
             <div className="flex items-center gap-3">
+              <Link
+                to="/elpro"
+                className="hidden lg:inline-flex items-center gap-1.5 text-xs font-bold text-brand-green border border-brand-green/30 bg-brand-green/5 px-3 py-1.5 rounded-full hover:bg-brand-green hover:text-white transition-all duration-200"
+              >
+                ELPro ✦
+              </Link>
               <Link
                 to="/get-involved"
                 className="hidden lg:inline-flex btn-primary text-sm py-2.5 px-5"
@@ -173,7 +187,12 @@ export default function Navbar() {
                         }
                         className="w-full flex items-center justify-between py-3 text-base font-semibold text-gray-800 border-b border-gray-100"
                       >
-                        {link.label}
+                        <span className="flex items-center gap-2">
+                          {link.label}
+                          {link.label === 'Programmes' && (
+                            <span className="text-[9px] font-black bg-brand-red text-white px-1.5 py-0.5 rounded-full uppercase">New</span>
+                          )}
+                        </span>
                         <ChevronDown
                           size={16}
                           className={cn(
@@ -207,9 +226,15 @@ export default function Navbar() {
                                 <Link
                                   key={child.label}
                                   to={child.href}
-                                  className="block py-2.5 text-sm text-gray-600 border-b border-gray-50"
+                                  className={cn(
+                                    'flex items-center justify-between py-2.5 text-sm border-b border-gray-50',
+                                    child.label.includes('ELPro') ? 'text-brand-green font-semibold' : 'text-gray-600'
+                                  )}
                                 >
                                   {child.label}
+                                  {child.label.includes('ELPro') && (
+                                    <span className="text-[9px] font-black bg-brand-red text-white px-1.5 py-0.5 rounded-full uppercase">New</span>
+                                  )}
                                 </Link>
                               )
                             )}
@@ -227,11 +252,11 @@ export default function Navbar() {
                   )}
                 </div>
               ))}
-              <div className="pt-6">
-                <Link
-                  to="/get-involved"
-                  className="btn-primary w-full justify-center"
-                >
+              <div className="pt-6 space-y-3">
+                <Link to="/elpro" className="btn-outline-green w-full justify-center">
+                  ELPro — Ethical Leaders Program ✦
+                </Link>
+                <Link to="/get-involved" className="btn-primary w-full justify-center">
                   Get Involved
                 </Link>
               </div>

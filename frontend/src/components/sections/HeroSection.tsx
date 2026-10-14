@@ -11,34 +11,42 @@ const slides = [
     highlight: 'Change',
     subtitle: 'for Kenya',
     description:
-      'HESABIKA is a catalyst for value-driven socio-economic transformation of Kenya — mobilizing Christians, professionals, students and the church to be salt and light in the world.',
+      'HESABIKA is FOCUS Kenya\'s Societal Transformation Arm — mobilizing Christians, professionals, students and the church to be salt and light in the world.',
+    cta1: { label: 'Our Story', href: '/about' },
+    cta2: { label: 'Get Involved', href: '/get-involved' },
   },
   {
-    image: '/images/hero-2.jpg',
-    badge: 'Governance Internship Programme',
-    title: 'Raising',
-    highlight: 'Values-Driven',
-    subtitle: 'Leaders',
+    image: '/images/gipro-group.jpg',
+    badge: '🆕 New Flagship Programme · April 2026',
+    title: 'Ethical Leaders',
+    highlight: 'Program',
+    subtitle: '(ELPro)',
     description:
-      '50+ young Kenyans placed in government institutions through GIPro — learning to serve with integrity, excellence and accountability.',
+      'ELPro — building a critical mass of ethical champions within government, strengthening integrity in public service, and fostering intergenerational transfer of values. 23 fellows enrolled.',
+    cta1: { label: 'Discover ELPro', href: '/elpro' },
+    cta2: { label: 'Apply Now', href: '/get-involved#elpro' },
   },
   {
     image: '/images/hero-3.jpg',
-    badge: 'Stand Up and Be Counted',
-    title: 'Transforming',
-    highlight: 'Kenya',
-    subtitle: 'Together',
+    badge: 'Five Thematic Caucuses',
+    title: 'Advocacy That',
+    highlight: 'Speaks',
+    subtitle: 'Truth to Power',
     description:
-      'The Hesabika call is for everyone — a call to translate concern into action, to be an agent of transformation in your sphere of influence.',
+      'Five expert-led caucuses engaging Kenya\'s most pressing challenges — governance, economy, education, public theology, and health — from a distinctly biblical standpoint.',
+    cta1: { label: 'Our Caucuses', href: '/caucuses' },
+    cta2: { label: 'Advocacy Areas', href: '/advocacy' },
   },
   {
-    image: '/images/hero-4.jpg',
-    badge: 'Mentorship & Leadership',
-    title: 'Investing in',
-    highlight: "Kenya's",
-    subtitle: 'Future',
+    image: '/images/hero-2.jpg',
+    badge: 'GIPro Legacy · 50+ Alumni',
+    title: 'Standing Up',
+    highlight: 'and Being',
+    subtitle: 'Counted',
     description:
-      '40+ experienced mentors guiding the next generation of governance leaders through 12 months of intensive training and real-world service.',
+      '50+ GIPro alumni serving Kenya across government, parliament, counties and constituencies. Their stories inspire the next generation of ethical leaders.',
+    cta1: { label: 'GIPro Alumni', href: '/gipro/interns' },
+    cta2: { label: 'GIPro Story', href: '/gipro' },
   },
 ]
 
@@ -86,7 +94,7 @@ export default function HeroSection() {
       {/* Overlay */}
       <div className="absolute inset-0 hero-overlay" />
 
-      {/* Red accent line */}
+      {/* Red/green accent line */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-red via-transparent to-brand-green" />
 
       {/* Content */}
@@ -143,24 +151,26 @@ export default function HeroSection() {
                 transition={{ duration: 0.7, delay: 0.4 }}
                 className="flex flex-wrap gap-4"
               >
-                <Link to="/about" className="btn-primary">
+                <Link to={slide.cta1.href} className="btn-primary">
                   <ArrowRight size={16} />
-                  Our Story
+                  {slide.cta1.label}
                 </Link>
-                <Link to="/get-involved" className="btn-outline-white">
-                  Get Involved
+                <Link to={slide.cta2.href} className="btn-outline-white">
+                  {slide.cta2.label}
                 </Link>
-                <a
-                  href="https://youtu.be/QDPgdffese8"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-white/80 text-sm font-semibold hover:text-white transition-colors"
-                >
-                  <span className="w-10 h-10 rounded-full border-2 border-white/40 flex items-center justify-center hover:border-white transition-colors">
-                    <Play size={14} className="ml-0.5" />
-                  </span>
-                  Theme Song
-                </a>
+                {current === 0 && (
+                  <a
+                    href="https://youtu.be/QDPgdffese8"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-white/80 text-sm font-semibold hover:text-white transition-colors"
+                  >
+                    <span className="w-10 h-10 rounded-full border-2 border-white/40 flex items-center justify-content hover:border-white transition-colors flex items-center justify-center">
+                      <Play size={14} className="ml-0.5" />
+                    </span>
+                    Theme Song
+                  </a>
+                )}
               </motion.div>
             </motion.div>
           </AnimatePresence>

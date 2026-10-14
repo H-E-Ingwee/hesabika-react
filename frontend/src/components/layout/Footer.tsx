@@ -11,15 +11,16 @@ const footerLinks = {
     { label: 'Contact', href: '/contact' },
   ],
   Programmes: [
-    { label: 'GIPro', href: '/gipro' },
-    { label: 'GIPro Interns', href: '/gipro/interns' },
-    { label: 'GIPro Mentors', href: '/gipro/mentors' },
-    { label: 'All Initiatives', href: '/initiatives' },
+    { label: 'ELPro (New)', href: '/elpro', highlight: true },
+    { label: 'GIPro Alumni', href: '/gipro' },
+    { label: 'Caucuses', href: '/caucuses' },
+    { label: 'Advocacy', href: '/advocacy' },
+    { label: 'Initiatives', href: '/initiatives' },
     { label: 'Church & Politics', href: 'https://churchandpolitics.hesabika.com/', external: true },
   ],
   'Get Involved': [
+    { label: 'Join ELPro', href: '/get-involved#elpro' },
     { label: 'Give / Donate', href: '/get-involved#give' },
-    { label: 'Become an Intern', href: '/get-involved#intern' },
     { label: 'Become a Mentor', href: '/get-involved#mentor' },
     { label: 'Careers', href: '/get-involved#careers' },
     { label: 'Blog & Resources', href: '/blog' },
@@ -45,12 +46,12 @@ export default function Footer() {
             <img
               src="/images/logo.png"
               alt="Hesabika Trust"
-              className="h-11 w-auto mb-5 brightness-0 invert"
-              onError={(e) => {
-                const t = e.target as HTMLImageElement
-                t.style.display = 'none'
-              }}
+              className="h-11 w-auto mb-2 brightness-0 invert"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
             />
+            <p className="text-brand-green text-xs font-bold uppercase tracking-widest mb-4">
+              FOCUS Kenya — Societal Transformation Arm
+            </p>
             <p className="text-white/50 text-sm leading-relaxed max-w-xs mb-6">
               Hesabika Trust is a catalyst for value-driven socio-economic transformation of Kenya — translating concern into action since 2016.
             </p>
@@ -104,14 +105,18 @@ export default function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-white/40 text-sm hover:text-white transition-all duration-150 hover:pl-1"
+                        className="text-white/40 text-sm hover:text-white transition-all duration-150 hover:pl-1 block"
                       >
                         {link.label} ↗
                       </a>
                     ) : (
                       <Link
                         to={link.href}
-                        className="text-white/40 text-sm hover:text-white transition-all duration-150 hover:pl-1 block"
+                        className={`text-sm hover:text-white transition-all duration-150 hover:pl-1 block ${
+                          'highlight' in link && link.highlight
+                            ? 'text-brand-green font-semibold'
+                            : 'text-white/40'
+                        }`}
                       >
                         {link.label}
                       </Link>
@@ -126,7 +131,7 @@ export default function Footer() {
         {/* MPESA giving strip */}
         <div className="py-5 border-b border-white/6">
           <div className="flex flex-wrap items-center gap-6 text-xs text-white/30">
-            <span className="font-semibold text-white/50 uppercase tracking-wider">Support GIPro via MPESA:</span>
+            <span className="font-semibold text-white/50 uppercase tracking-wider">Support via MPESA:</span>
             <span>Paybill: <strong className="text-white/60">{SITE_CONFIG.mpesa_paybill}</strong></span>
             <span>Account: <strong className="text-white/60">{SITE_CONFIG.mpesa_account}</strong></span>
             <span className="hidden sm:inline">|</span>
@@ -137,7 +142,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="flex flex-col sm:flex-row items-center justify-between py-5 gap-3">
           <p className="text-white/25 text-xs">
-            © {new Date().getFullYear()} Hesabika Trust. All Rights Reserved.
+            © {new Date().getFullYear()} Hesabika Trust | FOCUS Kenya. All Rights Reserved.
           </p>
           <p className="text-white/25 text-xs flex items-center gap-1">
             Designed with <Heart size={11} className="text-brand-red fill-brand-red" /> for Kenya's Transformation

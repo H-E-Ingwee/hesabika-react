@@ -211,6 +211,19 @@ export default function GetInvolvedPage() {
         breadcrumbs={[{ label: 'Get Involved' }]}
       />
 
+      {/* ELPro Banner */}
+      <div className="bg-brand-green py-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+            <p className="text-white text-sm font-semibold">
+              🆕 <strong>ELPro</strong> — Ethical Leaders Program is now open. 23 fellows enrolled in the inaugural cohort.
+            </p>
+          </div>
+          <a href="#elpro" className="text-white/80 text-xs font-bold hover:text-white transition-colors flex-shrink-0">Apply Now →</a>
+        </div>
+      </div>
+
       {/* Ways grid */}
       <section className="py-20 bg-white" ref={ref}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -297,7 +310,73 @@ export default function GetInvolvedPage() {
             </div>
           </div>
 
-          {/* Intern Application */}
+          {/* ELPro Application */}
+          <div id="elpro" className="scroll-mt-24 mb-24">
+            <div className="bg-[#0d0d0d] rounded-2xl p-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+              <div>
+                <span className="inline-flex items-center gap-2 bg-brand-red/20 text-brand-red text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-full mb-4">
+                  ✦ New Flagship Programme
+                </span>
+                <h2 className="font-serif font-bold text-white text-3xl mb-4">Join ELPro</h2>
+                <div className="w-12 h-1 bg-brand-green rounded-full mb-5" />
+                <p className="text-white/65 leading-relaxed mb-4">
+                  The Ethical Leaders Program (ELPro) is a one-year mentorship and leadership development program designed to build ethical champions within government and public service.
+                </p>
+                <p className="text-white/65 leading-relaxed mb-6">
+                  23 fellows are enrolled in the inaugural cohort (April 2026 – April 2027). Applications for the next cohort are open.
+                </p>
+                <div className="space-y-2 mb-6">
+                  {['Build ethical champions within government', 'Strengthen integrity in public service', 'Foster intergenerational transfer of values', 'Provide accountability support systems'].map((obj, i) => (
+                    <div key={i} className="flex gap-2 items-start text-sm text-white/60">
+                      <span className="text-brand-green mt-0.5">✓</span>
+                      {obj}
+                    </div>
+                  ))}
+                </div>
+                <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                  <p className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2">ELPro Partners</p>
+                  <p className="text-white/70 text-sm">EACC · PSC · KSG · Katiba Movement · FOCUS Kenya</p>
+                </div>
+              </div>
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
+                <h3 className="font-serif font-bold text-white text-xl mb-1">Apply for ELPro</h3>
+                <p className="text-white/50 text-sm mb-6">Register your interest and we'll be in touch about the next cohort.</p>
+                <form onSubmit={(e) => { e.preventDefault(); const btn = (e.target as HTMLFormElement).querySelector('button[type="submit"]') as HTMLButtonElement; btn.textContent = '✓ Submitted!'; btn.style.background = '#166935'; setTimeout(() => { btn.textContent = 'Submit Application'; btn.style.background = ''; }, 3000); }} className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="form-label-dark">First Name</label>
+                      <input type="text" placeholder="First name" className="form-input-dark" required />
+                    </div>
+                    <div>
+                      <label className="form-label-dark">Last Name</label>
+                      <input type="text" placeholder="Last name" className="form-input-dark" required />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="form-label-dark">Email Address</label>
+                    <input type="email" placeholder="your@email.com" className="form-input-dark" required />
+                  </div>
+                  <div>
+                    <label className="form-label-dark">Phone Number</label>
+                    <input type="tel" placeholder="+254 7XX XXX XXX" className="form-input-dark" required />
+                  </div>
+                  <div>
+                    <label className="form-label-dark">Current Role / Sector</label>
+                    <input type="text" placeholder="e.g. Public servant, NGO, Private sector" className="form-input-dark" />
+                  </div>
+                  <div>
+                    <label className="form-label-dark">Why do you want to join ELPro?</label>
+                    <textarea rows={3} placeholder="Tell us about your passion for ethical leadership in public service..." className="form-input-dark resize-none" />
+                  </div>
+                  <button type="submit" className="btn-primary w-full justify-center">
+                    <ArrowRight size={16} /> Submit Application
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          {/* Intern Application (GIPro Archive) */}
           <div id="intern" className="scroll-mt-24 mb-24">
             <div className="text-center mb-10">
               <SectionHeader label="Apply" title="Become a GIPro Intern" description="Applications for the next GIPro cohort open periodically. Register your interest below and we'll notify you when applications open." center labelColor="green" dividerColor="green" />
