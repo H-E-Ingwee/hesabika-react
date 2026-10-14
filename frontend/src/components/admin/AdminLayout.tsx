@@ -1,31 +1,60 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, FileText, Users, UserCheck, Shield,
   Mail, Bell, Download, Calendar, Settings, LogOut,
   Menu, X, ChevronRight, Star, MessageSquare, Heart,
-  BookOpen, Megaphone
+  BookOpen, Megaphone, ChevronLeft
 } from 'lucide-react'
 import { signOut } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
-const navItems = [
-  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
-  { label: 'Blog Posts', href: '/admin/blog', icon: FileText },
-  { label: 'ELPro Fellows', href: '/admin/elpro', icon: Star },
-  { label: 'GIPro Alumni', href: '/admin/interns', icon: Users },
-  { label: 'Mentors', href: '/admin/mentors', icon: UserCheck },
-  { label: 'Board Members', href: '/admin/board', icon: Shield },
-  { label: 'Secretariat', href: '/admin/secretariat', icon: Users },
-  { label: 'Messages', href: '/admin/messages', icon: MessageSquare, badge: 'unread' },
-  { label: 'Applications', href: '/admin/applications', icon: BookOpen },
-  { label: 'Newsletter', href: '/admin/newsletter', icon: Bell },
-  { label: 'Events', href: '/admin/events', icon: Calendar },
-  { label: 'Downloads', href: '/admin/downloads', icon: Download },
-  { label: 'Donations', href: '/admin/donations', icon: Heart },
-  { label: 'Settings', href: '/admin/settings', icon: Settings },
+const navGroups = [
+  {
+    label: 'Overview',
+    items: [
+      { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
+    ],
+  },
+  {
+    label: 'Content',
+    items: [
+      { label: 'Blog Posts', href: '/admin/blog', icon: FileText },
+    ],
+  },
+  {
+    label: 'Programmes',
+    items: [
+      { label: 'ELPro Fellows', href: '/admin/elpro', icon: Star },
+      { label: 'GIPro Alumni', href: '/admin/interns', icon: Users },
+      { label: 'Mentors', href: '/admin/mentors', icon: UserCheck },
+    ],
+  },
+  {
+    label: 'Organisation',
+    items: [
+      { label: 'Board Members', href: '/admin/board', icon: Shield },
+      { label: 'Secretariat', href: '/admin/secretariat', icon: Users },
+    ],
+  },
+  {
+    label: 'Engagement',
+    items: [
+      { label: 'Messages', href: '/admin/messages', icon: MessageSquare },
+      { label: 'Applications', href: '/admin/applications', icon: BookOpen },
+      { label: 'Newsletter', href: '/admin/newsletter', icon: Bell },
+      { label: 'Events', href: '/admin/events', icon: Calendar },
+      { label: 'Downloads', href: '/admin/downloads', icon: Download },
+    ],
+  },
+  {
+    label: 'System',
+    items: [
+      { label: 'Settings', href: '/admin/settings', icon: Settings },
+    ],
+  },
 ]
 
 interface AdminLayoutProps {
@@ -36,7 +65,7 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children, title, subtitle, actions }: AdminLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [collapsed, setCollapsed] = useState(false)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
@@ -44,7 +73,7 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
   const handleSignOut = async () => {
     try {
       await signOut()
-      toast.success('Signed out successfully')
+      toast.success('Signed out')
       navigate('/admin/login')
     } catch {
       toast.error('Failed to sign out')
@@ -54,58 +83,71 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
   const isActive = (href: string, exact?: boolean) =>
     exact ? location.pathname === href : location.pathname.startsWith(href)
 
-  const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <div className={cn(
-      'flex flex-col h-full bg-[#0d0d0d] border-r border-white/6',
-      mobile ? 'w-72' : sidebarOpen ? 'w-64' : 'w-16'
-    )}>
+  const SidebarContent = ({ mobile = false }: { mobile?: boolean }) => (
+    <div className={cn('flex flex-col h-full bg-white border-r border-gray-100', mobile ? 'w-64' : collapsed ? 'w-[60px]' : 'w-56')}>
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-white/6">
-        <img src="/images/logo.png" alt="Hesabika" className="h-8 w-auto brightness-0 invert flex-shrink-0"
+      <div className={cn('flex items-center border-b border-gray-100 flex-shrink-0', collapsed && !mobile ? 'justify-center px-3 py-4' : 'gap-2.5 px-4 py-4')}>
+        <img src="/images/logo.png" alt="Hesabika" className="h-7 w-auto flex-shrink-0"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
-        {(sidebarOpen || mobile) && (
-          <div>
-            <p className="text-white font-bold text-sm leading-tight">Hesabika</p>
-            <p className="text-white/40 text-xs">Admin CMS</p>
+        {(!collapsed || mobile) && (
+          <div className="min-w-0">
+            <p className="font-bold text-gray-900 text-sm leading-tight truncate">Hesabika</p>
+            <p className="text-gray-400 text-[10px] truncate">Admin Dashboard</p>
           </div>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-0.5">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            to={item.href}
-            onClick={() => mobile && setMobileSidebarOpen(false)}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group',
-              isActive(item.href, item.exact)
-                ? 'bg-brand-green text-white'
-                : 'text-white/50 hover:text-white hover:bg-white/5'
+      <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+        {navGroups.map(group => (
+          <div key={group.label}>
+            {(!collapsed || mobile) && (
+              <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest px-2 mb-1.5">{group.label}</p>
             )}
-          >
-            <item.icon size={18} className="flex-shrink-0" />
-            {(sidebarOpen || mobile) && (
-              <>
-                <span className="flex-1">{item.label}</span>
-                {isActive(item.href, item.exact) && <ChevronRight size={14} />}
-              </>
-            )}
-          </Link>
+            <div className="space-y-0.5">
+              {group.items.map(item => {
+                const active = isActive(item.href, (item as any).exact)
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => mobile && setMobileSidebarOpen(false)}
+                    title={collapsed && !mobile ? item.label : undefined}
+                    className={cn(
+                      'flex items-center rounded-lg text-sm font-medium transition-all duration-150 group',
+                      collapsed && !mobile ? 'justify-center w-9 h-9 mx-auto' : 'gap-2.5 px-2.5 py-2',
+                      active
+                        ? 'bg-brand-green/10 text-brand-green'
+                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                    )}
+                  >
+                    <item.icon size={16} className={cn('flex-shrink-0', active ? 'text-brand-green' : 'text-gray-400 group-hover:text-gray-600')} />
+                    {(!collapsed || mobile) && (
+                      <span className="flex-1 truncate">{item.label}</span>
+                    )}
+                    {(!collapsed || mobile) && active && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-brand-green flex-shrink-0" />
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
         ))}
       </nav>
 
-      {/* Sign out */}
-      <div className="p-3 border-t border-white/6">
+      {/* Footer */}
+      <div className={cn('border-t border-gray-100 p-2 flex-shrink-0', collapsed && !mobile ? 'flex justify-center' : '')}>
         <button
           onClick={handleSignOut}
+          title={collapsed && !mobile ? 'Sign Out' : undefined}
           className={cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-white hover:bg-brand-red/20 transition-all duration-200 w-full',
+            'flex items-center gap-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-brand-red hover:bg-brand-red/5 transition-all duration-150',
+            collapsed && !mobile ? 'w-9 h-9 justify-center' : 'w-full px-2.5 py-2'
           )}
         >
-          <LogOut size={18} className="flex-shrink-0" />
-          {(sidebarOpen || mobile) && <span>Sign Out</span>}
+          <LogOut size={16} className="flex-shrink-0" />
+          {(!collapsed || mobile) && <span>Sign Out</span>}
         </button>
       </div>
     </div>
@@ -114,8 +156,15 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex flex-col flex-shrink-0 transition-all duration-300">
-        <Sidebar />
+      <div className="hidden lg:flex flex-col flex-shrink-0 transition-all duration-300 relative">
+        <SidebarContent />
+        {/* Collapse toggle */}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="absolute -right-3 top-16 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 shadow-sm transition-colors z-10"
+        >
+          {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
+        </button>
       </div>
 
       {/* Mobile Sidebar */}
@@ -126,55 +175,53 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+              className="fixed inset-0 bg-black/40 z-40 lg:hidden backdrop-blur-sm"
               onClick={() => setMobileSidebarOpen(false)}
             />
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.25 }}
-              className="fixed left-0 top-0 bottom-0 z-50 lg:hidden"
+              transition={{ type: 'tween', duration: 0.22 }}
+              className="fixed left-0 top-0 bottom-0 z-50 lg:hidden shadow-xl"
             >
-              <Sidebar mobile />
+              <SidebarContent mobile />
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Main */}
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Top bar */}
-        <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-4">
+        <header className="bg-white border-b border-gray-100 px-5 py-3.5 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-3">
             <button
-              onClick={() => {
-                setSidebarOpen(!sidebarOpen)
-                setMobileSidebarOpen(!mobileSidebarOpen)
-              }}
-              className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+              onClick={() => setMobileSidebarOpen(true)}
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
             >
-              <Menu size={20} />
+              <Menu size={18} />
             </button>
             <div>
-              <h1 className="font-serif font-bold text-gray-900 text-xl">{title}</h1>
-              {subtitle && <p className="text-gray-500 text-xs mt-0.5">{subtitle}</p>}
+              <h1 className="font-semibold text-gray-900 text-base leading-tight">{title}</h1>
+              {subtitle && <p className="text-gray-400 text-xs mt-0.5">{subtitle}</p>}
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {actions}
             <Link
               to="/"
               target="_blank"
-              className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-100"
             >
-              View Site →
+              View Site
+              <ChevronRight size={12} />
             </Link>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-5">
           {children}
         </main>
       </div>
