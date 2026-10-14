@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "cd frontend && npm install",
+  "framework": null,
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/node@3.0.0"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/contact", "destination": "/api/contact" },
+    { "source": "/api/newsletter", "destination": "/api/newsletter" },
+    { "source": "/api/upload", "destination": "/api/upload" },
+    { "source": "/api/applications/intern", "destination": "/api/applications/intern" },
+    { "source": "/api/applications/mentor", "destination": "/api/applications/mentor" },
+    { "source": "/api/admin/stats", "destination": "/api/admin/stats" },
+    { "source": "/api/admin/messages", "destination": "/api/admin/messages" },
+    { "source": "/api/admin/applications", "destination": "/api/admin/applications" },
+    { "source": "/api/admin/blog", "destination": "/api/admin/blog" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,PATCH,DELETE,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
+  ]
+}

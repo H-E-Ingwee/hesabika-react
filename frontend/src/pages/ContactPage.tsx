@@ -46,19 +46,20 @@ export default function ContactPage() {
   const onSubmit = async (data: FormData) => {
     setSubmitting(true)
     try {
-      const { error } = await supabase.from('contact_messages').insert([data])
-      if (error) throw error
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error('API failed')
       toast.success('Message sent! We\'ll get back to you within 2 business days.')
       reset()
     } catch {
+      // Fallback: direct Supabase insert
       try {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-        if (!res.ok) throw new Error()
-        toast.success('Message sent successfully!')
+        const { error } = await supabase.from('contact_messages').insert([{ ...data, read: false }])
+        if (error) throw error
+        toast.success('Message received! We\'ll get back to you within 2 business days.')
         reset()
       } catch {
         toast.error('Failed to send. Please email info@hesabika.com directly.')

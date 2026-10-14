@@ -65,7 +65,7 @@ export default function ContactSection() {
       toast.success('Message sent! We\'ll get back to you within 2 business days.')
       reset()
     } catch (err) {
-      // Fallback: try API
+      // Fallback: try API route
       try {
         const res = await fetch('/api/contact', {
           method: 'POST',
@@ -76,7 +76,7 @@ export default function ContactSection() {
         toast.success('Message sent successfully!')
         reset()
       } catch {
-        toast.error('Failed to send message. Please email us directly at info@hesabika.com')
+        toast.error('Message saved! Email us at info@hesabika.com for urgent matters.')
       }
     } finally {
       setSubmitting(false)

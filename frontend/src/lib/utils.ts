@@ -63,14 +63,16 @@ export function getImageUrl(path: string): string {
   return path
 }
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+// API URL: empty string = same domain (Vercel), or set VITE_API_URL for local dev
+export const API_URL = import.meta.env.VITE_API_URL || ''
 
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
   const token = localStorage.getItem('hesabika_token')
-  const res = await fetch(`${API_URL}${endpoint}`, {
+  const url = API_URL ? `${API_URL}${endpoint}` : endpoint
+  const res = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

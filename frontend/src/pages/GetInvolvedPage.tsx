@@ -57,12 +57,24 @@ function InternForm() {
   const onSubmit = async (data: InternForm) => {
     setSubmitting(true)
     try {
-      const { error } = await supabase.from('intern_applications').insert([data])
-      if (error) throw error
+      const res = await fetch('/api/applications/intern', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error('Failed')
       toast.success('Application submitted! We\'ll be in touch soon.')
       reset()
     } catch {
-      toast.error('Failed to submit. Please email info@hesabika.com')
+      // Fallback to Supabase direct
+      try {
+        const { error } = await supabase.from('intern_applications').insert([{ ...data, status: 'pending' }])
+        if (error) throw error
+        toast.success('Application submitted! We\'ll be in touch soon.')
+        reset()
+      } catch {
+        toast.error('Failed to submit. Please email info@hesabika.com')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -119,12 +131,23 @@ function MentorFormComponent() {
   const onSubmit = async (data: MentorForm) => {
     setSubmitting(true)
     try {
-      const { error } = await supabase.from('mentor_applications').insert([data])
-      if (error) throw error
+      const res = await fetch('/api/applications/mentor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error('Failed')
       toast.success('Application submitted! We\'ll be in touch soon.')
       reset()
     } catch {
-      toast.error('Failed to submit. Please email info@hesabika.com')
+      try {
+        const { error } = await supabase.from('mentor_applications').insert([{ ...data, status: 'pending' }])
+        if (error) throw error
+        toast.success('Application submitted! We\'ll be in touch soon.')
+        reset()
+      } catch {
+        toast.error('Failed to submit. Please email info@hesabika.com')
+      }
     } finally {
       setSubmitting(false)
     }
