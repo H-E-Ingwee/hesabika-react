@@ -49,7 +49,7 @@ export default function VisionMissionSection() {
                 A Transformed Kenya
               </h3>
               <p className="text-white/80 leading-relaxed text-base">
-                A Kenya where every citizen is accountable, values-driven, and actively contributing to the transformation of their nation — a Kenya that reflects God's justice, integrity and excellence.
+                Translating Concerns Into Action.
               </p>
               <div className="mt-6 pt-5 border-t border-white/15">
                 <Link to="/about" className="inline-flex items-center gap-2 text-white/70 text-sm font-semibold hover:text-white transition-colors group/link">
